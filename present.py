@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 import math
 import os
+import psycopg2
 import re
 
 local_server = True
@@ -32,12 +33,13 @@ app.config.update(
 mail = Mail(app)
 
 if(local_server):
-    app.config["SQLALCHEMY_DATABASE_URI"] = params["local_uri"]
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ['DATABASE_URL']
 else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = params["prod_uri"]
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ['DATABASE_URL']
 
 db = SQLAlchemy(app)
 
+conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
 
 class Songs(db.Model):
     sid = db.Column(db.Integer, primary_key=True)
