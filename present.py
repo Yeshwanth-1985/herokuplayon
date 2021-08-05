@@ -41,6 +41,10 @@ db = SQLAlchemy(app)
 
 conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
 
+params["gmail_username"] = os.environ["ADMIN_EMAIL"]
+params["gmail_password"] = os.environ["ADMIN_PASSWORD"]
+
+
 class Songs(db.Model):
     sid = db.Column(db.Integer, primary_key=True)
     song_name = db.Column(db.String(20), nullable=False)
