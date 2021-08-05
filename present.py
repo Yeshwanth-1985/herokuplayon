@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -198,17 +198,17 @@ def searchname(username,page):
             keyword = request.form.get('keyword')
             if category == "movie":
                 key = "%{0}%".format(keyword)
-                results = Songs.query.filter(Songs.movie_name.like(key)).all()
+                results = Songs.query.filter(Songs.movie_name.ilike(key)).all()
             elif category == "song":
                 key = "%{0}%".format(keyword)
-                results = Songs.query.filter(Songs.song_name.like(key)).all()
+                results = Songs.query.filter(Songs.song_name.ilike(key)).all()
             elif category == "lyrics":
                 key = "%{0}%".format(keyword)
-                results = Songs.query.filter(Songs.song_lyrics.like(key)).all()
+                results = Songs.query.filter(Songs.song_lyrics.ilike(key)).all()
             else:
                 key = "%{0}%".format(keyword)
                 list = []
-                details = Song_trivia.query.with_entities(Song_trivia.sid).filter(or_(Song_trivia.singers_name.like(key), Song_trivia.music_director.like(key),Song_trivia.lyricist.like(key))).all()
+                details = Song_trivia.query.with_entities(Song_trivia.sid).filter(or_(Song_trivia.singers_name.ilike(key), Song_trivia.music_director.ilike(key),Song_trivia.lyricist.ilike(key))).all()
                 for detail in details:
                     list.append(int(detail[0]))
                 results = Songs.query.filter(Songs.sid.in_(list)).all()
